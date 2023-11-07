@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////
 //                                               //
-//           logic_retrigger_last_note           //
+//                   NeatRepeat                  //
 //          Logic Pro X Scripter script          //
 //                                               //
 //             Made for: Vince Webb              //
 //          https://www.vincewebb.com/           //
 //                                               //
 //  Author: Adam Adams (adam@adam-adams.com)     //
-//  Version: v1.01 (2023-11-07)                  //
+//  Version: v1.0.0 (2023-11-07)                 //
 //                                               //
 ///////////////////////////////////////////////////
 
@@ -150,77 +150,63 @@ var PluginParameters = [
     defaultValue: 48,
   },
   { name: "Learn", type: "momentary", defaultValue: 0 },
-  {
-    name: "NoteOff delay",
-    type: "lin",
-    numberOfSteps: 384,
-    minValue: 80,
-    maxValue: 2000,
-    defaultValue: 100,
-  },
   { name: "Use original velocity", type: "checkbox", defaultValue: 0 },
+  { name: "Different Ch. for retriggers", type: "checkbox", defaultValue: 0 },
 ];
 
 var lastNote;
-var noteOnTime;
-var delay;
+var channelOffset = 1;
+var multiChannel = false;
 var triggerNote = GetParameter("Trigger Note");
 var learning = false;
 
+function createEvent(type, pitch, velocity, channel) {
+  var event = new type();
+  event.pitch = MIDI.normalizeData(pitch);
+  event.velocity = MIDI.normalizeData(velocity);
+  event.channel = MIDI.normalizeData(channel);
+  return event;
+}
+
+function sendEvent(event) {
+  event.send();
+  event.trace();
+}
+
 function HandleMIDI(event) {
-  var currentTriggerNote = GetParameter("Trigger Note");
-  if (triggerNote === null || triggerNote !== currentTriggerNote) {
-    triggerNote = currentTriggerNote;
-    SetParameter("Trigger Note", triggerNote);
+  if (event.channel == 16) {
+    -channelOffset;
   }
-  if (event instanceof NoteOn) {
-    noteOnTime = new Date().getTime();
-    if (learning) {
-      triggerNote = event.pitch;
-      learning = false;
+  if (event instanceof NoteOn || event instanceof NoteOff) {
+    var currentTriggerNote = GetParameter("Trigger Note");
+    if (triggerNote !== currentTriggerNote) {
+      triggerNote = currentTriggerNote;
       SetParameter("Trigger Note", triggerNote);
-    } else if (event.pitch == triggerNote) {
-      if (lastNote != null) {
-        // Preparing new event
-        var newEvent = new NoteOn();
-        // Setting up all the properties as the lastNote
-        newEvent.pitch = MIDI.normalizeData(lastNote.pitch);
-        if (GetParameter("Use original velocity")) {
-          newEvent.velocity = MIDI.normalizeData(lastNote.velocity);
-        } else {
-          newEvent.velocity = MIDI.normalizeData(event.velocity);
-        }
-        newEvent.channel = MIDI.normalizeData(lastNote.channel);
-        // Send it
-        newEvent.send();
-        newEvent.trace();
-        // Have to send noteOff too...
-        newEvent = new NoteOff();
-        newEvent.pitch = MIDI.normalizeData(lastNote.pitch);
-        newEvent.velocity = MIDI.normalizeData(0);
-        newEvent.channel = MIDI.normalizeData(lastNote.channel);
-        // We'll give it customizable delay
-        Trace("Measured delay: " + delay);
-        newEvent.sendAfterMilliseconds(delay);
-        newEvent.trace();
-      }
-    } else {
-      // Store the last played note
-      lastNote = event;
-      event.send();
-      event.trace();
     }
-  } else if (
-    event instanceof NoteOff &&
-    lastNote != null &&
-    event.pitch == lastNote.pitch
-  ) {
-    // NoteOff event for the last played note, update lastNote to null
-    delay = new Date().getTime() - noteOnTime;
-    event.send();
-    event.trace();
+    if (event instanceof NoteOn) {
+      if (learning) {
+        triggerNote = event.pitch;
+        learning = false;
+        SetParameter("Trigger Note", triggerNote);
+      } else if (event.pitch == triggerNote && lastNote != null) {
+        var newEvent = createEvent(NoteOff, lastNote.pitch, 0, lastNote.channel);
+        sendEvent(newEvent);
+        newEvent = createEvent(NoteOn, lastNote.pitch, GetParameter("Use original velocity") ? lastNote.velocity : event.velocity, GetParameter("Different Ch. for retriggers") ? lastNote.channel + channelOffset : lastNote.channel);
+        sendEvent(newEvent);
+      } else {
+        lastNote = event;
+        sendEvent(event);
+      }
+    } else if (event instanceof NoteOff) {
+      if (event.pitch == triggerNote) {
+        var newEvent = createEvent(NoteOff, lastNote.pitch, 0, GetParameter("Different Ch. for retriggers") ? lastNote.channel + channelOffset : lastNote.channel);
+        sendEvent(newEvent);
+      } else {
+        sendEvent(event);
+      }
+    }
   } else {
-    event.send();
+    sendEvent(event);
   }
 }
 

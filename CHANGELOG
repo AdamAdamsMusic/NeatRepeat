@@ -1,0 +1,75 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog],
+and this project adheres to [Semantic Versioning].
+
+## [Unreleased]
+
+## [1.0.0] - 2023-11-07
+
+### Added
+
+- Added changelog tracking
+
+### Changed
+
+- Changed the name to NeatRepeat
+
+## [0.1.5] - 2023-11-07
+
+### Added
+
+- Different (MIDI) Ch. for retrigger
+  - Since not having separate note instances is a limitation of the MIDI protocol, when the script sends a lot of MIDI NoteOn/NoteOff messages for the exact same key – it gets really confusing and some notes are cut off, while the other hang indefinitely. The workaround is to send the retriggered notes on a different MIDI channel, so they don't interfere. This allows for proper retriggering without artifacts, but comes with its own limitations (especially visible with VEP/multitimbral setup users).
+
+## [0.1.4] - 2023-11-07
+
+### Fixed
+
+- Script now allows any other MIDI message (e.g. MIDI CC) to be bypassed without processing, instead of filtering them out
+
+## [0.1.3] - 2023-11-07
+
+### Added
+
+- Script now kills (sends NoteOff for) the previously sounding note of the same number, in order to trigger another one – removing the overlay issue
+
+## [0.1.2] - 2023-11-07
+
+### Changed
+
+- Now the trigger key note behaves as it should, instead of having a NoteOff sent after a fixed amount of time
+
+## [0.1.1] - 2023-11-07
+
+### Added
+
+- Delay between NoteOn and NoteOff is now calculated automatically, based on the note you hit before the trigger key
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+- Removed the NoteOff delay slider
+
+### Fixed
+
+- Choosing trigger key from the menu didn't work
+
+### Security
+
+## [0.1.0] - 2023-11-05
+
+- initial release
+
+<!-- Links -->
+[keep a changelog]: https://keepachangelog.com/en/1.0.0/
+[semantic versioning]: https://semver.org/spec/v2.0.0.html
+
+<!-- Versions -->
+[unreleased]: https://github.com/AdamAdamsMusic/NeatRepeat/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/AdamAdamsMusic/NeatRepeat/releases/tag/v1.0.0
