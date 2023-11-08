@@ -34,6 +34,7 @@
 - Download the [latest release][latest]
 - Move the .pst file to ~/Music/Audio Music Apps/Plug-In Settings/Scripter
 - Add "Scripter" in the MIDI FX plugin section in Logic
+- (Optional, but strongly suggested) Click on the MIDI FX slot just below "Scripter" and enable "Record MIDI to Track Here"
 - Load up the preset from the list
 
 ## About
@@ -46,7 +47,6 @@ MIDI keyboard has a size constraint. It's hard to quickly press one key in rapid
 
 ## Known issues
 - MIDI protocol specification, more specifically the lack of "note instance". MIDI only allows sending NoteOn/NoteOff messages, without actual note instances. That is understandable – you have one key for every note. This functionality – having many instances of the exact same note on the exact same MIDI channel – was not really envisioned, because… *why would you need it*?! So when lots of identical messages are sent in quick succession, some may get cut off or hang indefinitely.
-- Re-trigger note being the actual MIDI note in the MIDI clip – that's a limitation of Logic itself and the channel path. Since the MIDI FX is in Logic, it accepts all inputs and transforms it using the Scripter. Solution for this would be to do the processing BEFORE MIDI signal reaches Logic. That is out of scope for this project.
 
 ## Contributing
 
