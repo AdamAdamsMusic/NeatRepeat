@@ -19,7 +19,9 @@
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg?style=flat-square)](https://github.com/AdamAdamsMusic/NeatRepeat/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![Downloads][downloads-badge]][releases]
 
-![Demo by Vince Webb](https://i.postimg.cc/C5BP8GD9/Play-fast-repeated-notes-with-ease-Neat-Repeat-9ctc77-HRGQw.gif)
+---
+
+![Demo by Vince Webb](NeatRepeat.gif)
 
 </div>
 
