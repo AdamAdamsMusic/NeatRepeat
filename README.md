@@ -19,7 +19,7 @@
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg?style=flat-square)](https://github.com/AdamAdamsMusic/NeatRepeat/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![Downloads][downloads-badge]][releases]
 
-
+![Demo by Vince Webb](https://i.postimg.cc/C5BP8GD9/Play-fast-repeated-notes-with-ease-Neat-Repeat-9ctc77-HRGQw.gif)
 
 </div>
 
@@ -36,6 +36,10 @@
 - Add "Scripter" in the MIDI FX plugin section in Logic
 - (Optional, but strongly suggested) Click on the MIDI FX slot just below "Scripter" and enable "Record MIDI to Track Here"
 - Load up the preset from the list
+
+## See it in action
+
+[![Play fast repeated notes with ease (NeatRepeat) – Vince Webb](http://i3.ytimg.com/vi/kl1RwhATTzA/hqdefault.jpg)](http://www.youtube.com/watch?v=kl1RwhATTzA "Play fast repeated notes with ease (NeatRepeat)")
 
 ## About
 
